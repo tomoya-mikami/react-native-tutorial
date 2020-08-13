@@ -1,5 +1,6 @@
 import React from "react";
 import { Image, StyleSheet } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 
 const styles = StyleSheet.create({
   logo: {
@@ -9,13 +10,15 @@ const styles = StyleSheet.create({
   },
 });
 
-const Container = (): React.ReactElement => {
-  return (
-    <Image
-      source={{ uri: "https://i.imgur.com/TkIrScD.png" }}
-      style={styles.logo}
-    />
-  );
+interface ContainerProps {
+  pickPhoto: ImagePicker.ImagePickerResult;
+}
+
+const Container = (props: ContainerProps): React.ReactElement => {
+  const uri = props.pickPhoto.cancelled
+    ? "https://i.imgur.com/TkIrScD.png"
+    : props.pickPhoto.uri;
+  return <Image source={{ uri: uri }} style={styles.logo} />;
 };
 
 export default Container;
