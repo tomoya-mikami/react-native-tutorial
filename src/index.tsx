@@ -1,5 +1,5 @@
 import React from "react";
-import Photo from "./Photo/Container";
+import Photo from "./Component/Photo/Container";
 
 const App = (): React.ReactElement => {
   return <Photo />;
