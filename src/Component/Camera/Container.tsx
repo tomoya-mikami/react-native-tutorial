@@ -39,12 +39,17 @@ const Container = (): React.ReactElement => {
     setAnnotationLabel(annotation);
   };
 
+  const sendCloudVisionSandbox = async (image: string) => {
+    const annotation = "testLabel";
+    setAnnotationLabel(annotation);
+  };
+
   const takePicture = async () => {
     if (camera?.current) {
       const { base64 } = await camera.current.takePictureAsync({
         base64: true,
       });
-      sendCloudVision(base64 || "");
+      sendCloudVisionSandbox(base64 || "");
     }
   };
 
