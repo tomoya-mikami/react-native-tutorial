@@ -3,6 +3,7 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { Camera } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
 import Environment from "../../../config/environments";
+import { Style } from "./style";
 
 const Container = (): React.ReactElement => {
   const [hasPermission, setHasPermission] = useState<null | boolean>(null);
@@ -69,47 +70,21 @@ const Container = (): React.ReactElement => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <Camera
-        style={{ flex: 1 }}
-        type={Camera.Constants.Type.back}
-        ref={camera}
-      >
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: "transparent",
-            flexDirection: "row",
+    <Camera style={Style.camera} type={Camera.Constants.Type.back} ref={camera}>
+      <View style={Style.annotationLabel}>
+        <Text style={Style.annotationLabelText}>{annotationLabel}</Text>
+      </View>
+
+      <View style={Style.snapButton}>
+        <TouchableOpacity
+          onPress={() => {
+            takePicture();
           }}
         >
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              padding: 16,
-              backgroundColor: "#fff",
-              alignSelf: "flex-end",
-              alignItems: "center",
-            }}
-            onPress={() => {
-              takePicture();
-            }}
-          >
-            <Ionicons name="ios-camera" size={48} color="#000" />
-          </TouchableOpacity>
-        </View>
-      </Camera>
-      <Text
-        style={{
-          fontSize: 36,
-          backgroundColor: "#fff",
-          color: "#000",
-          textAlign: "center",
-          padding: 16,
-        }}
-      >
-        {annotationLabel}
-      </Text>
-    </View>
+          <Ionicons name="ios-camera" size={48} style={Style.snapButtonText} />
+        </TouchableOpacity>
+      </View>
+    </Camera>
   );
 };
 
