@@ -4,10 +4,11 @@ import { Camera } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
 import Environment from "../../../config/environments";
 import { Style } from "./style";
+import AnnotationLabel from "./AnnotationLabel/Component";
 
 const Container = (): React.ReactElement => {
   const [hasPermission, setHasPermission] = useState<null | boolean>(null);
-  const [annotationLabel, setAnnotationLabel] = useState<string>("");
+  const [annotationLabelText, setAnnotationLabelText] = useState<string>("");
   const camera = React.useRef<Camera>(null);
 
   const sendCloudVision = async (image: string) => {
@@ -37,12 +38,12 @@ const Container = (): React.ReactElement => {
     const annotation =
       (result.responses[0].labelAnnotations[0].description as string) || "";
 
-    setAnnotationLabel(annotation);
+    setAnnotationLabelText(annotation);
   };
 
   const sendCloudVisionSandbox = async (image: string) => {
     const annotation = "testLabel";
-    setAnnotationLabel(annotation);
+    setAnnotationLabelText(annotation);
   };
 
   const takePicture = async () => {
@@ -71,10 +72,10 @@ const Container = (): React.ReactElement => {
 
   return (
     <Camera style={Style.camera} type={Camera.Constants.Type.back} ref={camera}>
-      <View style={Style.annotationLabel}>
-        <Text style={Style.annotationLabelText}>{annotationLabel}</Text>
-      </View>
-
+      <AnnotationLabel
+        annotationLabelText={annotationLabelText}
+        disable={annotationLabelText === ""}
+      />
       <View style={Style.snapButton}>
         <TouchableOpacity
           onPress={() => {

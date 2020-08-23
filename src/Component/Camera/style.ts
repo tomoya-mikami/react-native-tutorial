@@ -7,16 +7,6 @@ export const Style = StyleSheet.create({
     alignItems: "center",
     padding: 48,
   },
-  annotationLabel: {
-    padding: 16,
-    margin: 16,
-    borderRadius: 50,
-    backgroundColor: "#fff",
-  },
-  annotationLabelText: {
-    fontSize: 48,
-    color: "#000",
-  },
   snapButton: {
     width: 80,
     height: 80,
