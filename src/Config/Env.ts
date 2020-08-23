@@ -5,9 +5,10 @@ import Production from "./Production/Box";
 export interface EnvBox {
   API_KEY: string;
   API_URL: string;
+  ENVIRONMENT: string;
 }
 
-export const getEnvBox = (): EnvBox => {
+export default (): EnvBox => {
   const env = Constants.manifest.releaseChannel;
   if (env !== undefined) {
     switch (env) {

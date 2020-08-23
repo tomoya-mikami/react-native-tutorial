@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import { Camera } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
-import Environment from "../../../config/environments";
+import EnvBox from "../../Config/Env";
 
 const Container = (): React.ReactElement => {
   const [hasPermission, setHasPermission] = useState<null | boolean>(null);
   const [annotationLabel, setAnnotationLabel] = useState<string>("");
+  const [base64Image, setBase64Image] = useState<string>("");
   const camera = React.useRef<Camera>(null);
 
   const sendCloudVision = async (image: string) => {
@@ -20,18 +21,14 @@ const Container = (): React.ReactElement => {
         },
       ],
     });
-    const response = await fetch(
-      "https://vision.googleapis.com/v1/images:annotate?key=" +
-        Environment["GOOGLE_CLOUD_VISION_API_KEY"],
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: body,
-      }
-    );
+    const response = await fetch(EnvBox().API_URL + EnvBox().API_KEY, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: body,
+    });
     const result = await response.json();
     const annotation =
       (result.responses[0].labelAnnotations[0].description as string) || "";
@@ -39,9 +36,20 @@ const Container = (): React.ReactElement => {
     setAnnotationLabel(annotation);
   };
 
-  const sendCloudVisionSandbox = async (image: string) => {
+  const sendCloudVisionSandbox = async () => {
     const annotation = "testLabel";
     setAnnotationLabel(annotation);
+  };
+
+  const objectDetection = async (base64Image: string) => {
+    if (base64Image === "") {
+      return;
+    }
+    if (EnvBox().ENVIRONMENT === "localhost") {
+      sendCloudVisionSandbox();
+    } else {
+      sendCloudVision(base64Image || "");
+    }
   };
 
   const takePicture = async () => {
@@ -49,9 +57,17 @@ const Container = (): React.ReactElement => {
       const { base64 } = await camera.current.takePictureAsync({
         base64: true,
       });
-      sendCloudVisionSandbox(base64 || "");
+      if (base64 !== undefined) {
+        setBase64Image(base64);
+      }
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      objectDetection(base64Image);
+    })();
+  }, [base64Image]);
 
   useEffect(() => {
     (async () => {
